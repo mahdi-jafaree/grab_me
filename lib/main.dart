@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -30,20 +32,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  bool visible = false;
-  AnimationController _controller;
-  Animation<Offset> _animation;
+  bool alienVisible = true;
+  bool onTop = false;
+  AnimationController _spaceController;
+  Animation<Offset> _spaceAnimation;
+
   void initState() {
-    _controller =
+    _spaceController =
         AnimationController(vsync: this, duration: Duration(seconds: 2))
           ..repeat(reverse: true);
-    _animation =
+    _spaceAnimation =
         Tween<Offset>(begin: Offset(-0.1, 0.0), end: Offset(.1, 0.0)).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: _spaceController,
         curve: Curves.easeInOutQuad,
       ),
     );
+
     super.initState();
   }
 
@@ -68,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage>
             children: [
               Expanded(
                 child: SlideTransition(
-                  position: _animation,
+                  position: _spaceAnimation,
                   child: Stack(
                     children: [
                       AnimatedPositioned(
@@ -77,7 +82,15 @@ class _MyHomePageState extends State<MyHomePage>
                           milliseconds: 500,
                         ),
                         child: AnimatedOpacity(
-                          opacity: visible ? 0.0 : 1.0,
+                          onEnd: () {
+                            if (!_spaceController.isAnimating) {
+                              print("ended");
+                              setState(() {
+                                alienVisible = true;
+                              });
+                            }
+                          },
+                          opacity: alienVisible ? 1.0 : 0.0,
                           duration: Duration(
                             seconds: 1,
                             milliseconds: 500,
@@ -88,13 +101,13 @@ class _MyHomePageState extends State<MyHomePage>
                             height: 100,
                           ),
                         ),
-                        bottom: visible
-                            ? MediaQuery.of(context).size.height * .6
+                        bottom: onTop
+                            ? MediaQuery.of(context).size.height * .65
                             : 10,
                         left: MediaQuery.of(context).size.width * .4,
                       ),
                       AnimatedOpacity(
-                        opacity: visible ? 1.0 : 0,
+                        opacity: alienVisible ? 0.0 : 1.0,
                         duration: Duration(milliseconds: 700),
                         child: ClipPath(
                           clipper: const BeamClipper(),
@@ -132,22 +145,25 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (_controller.isAnimating) {
-            _controller.stop();
-            setState(() {
-              visible = true;
-            });
-          } else if (!_controller.isAnimating) {
-            _controller.repeat(reverse: true);
-            setState(() {
-              visible = false;
-            });
-          }
+          _spaceController.stop();
+          setState(() {
+            alienVisible = !alienVisible;
+            onTop = !onTop;
+          });
+          Timer(Duration(seconds: 2), () {
+            _spaceController.repeat(reverse: true);
+          });
         },
         tooltip: 'Increment',
-        child: Icon(visible ? Icons.arrow_downward : Icons.arrow_upward),
+        child: Icon(alienVisible ? Icons.arrow_upward : Icons.arrow_downward),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _spaceController.dispose();
+    super.dispose();
   }
 }
 
