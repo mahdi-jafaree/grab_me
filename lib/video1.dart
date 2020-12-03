@@ -63,16 +63,10 @@ class _VideoState extends State<Video> {
       body: Stack(
         children: <Widget>[
           Container(
+            alignment: Alignment.center,
             height: double.infinity,
             width: double.maxFinite,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  "https://www.askideas.com/media/16/Funny-Cob-Home-Image.jpg",
-                ),
-                fit: BoxFit.fill,
-              ),
-            ),
+            decoration: BoxDecoration(color: Colors.white),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -80,33 +74,34 @@ class _VideoState extends State<Video> {
               FutureBuilder(
                   future: fetchItems(widget.itemId),
                   builder: (context, snap) {
-                    print("data : ${snap.data}");
                     if (snap.hasData && snap.data != null) {
                       _controller =
                           VideoPlayerController.network(snap.data.video1);
+                      _controller.addListener(() {
+                        setState(() {});
+                      });
                       _controller.setLooping(true);
                       _controller.initialize().then((value) {
                         setState(() {});
                       });
                       _controller.setVolume(1.0);
                       _controller.play();
-                    }
-                    return snap.hasData && snap.data != null
-                        ? _controller.value.initialized
-                            ? Column(
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: _controller.value.aspectRatio,
-                                    child: VideoPlayer(_controller),
-                                  ),
-                                  // Icon(_controller.value.initialized &&
-                                  //         _controller.value.isPlaying
-                                  //     ? Icons.pause
-                                  //     : Icons.play_arrow),
-                                ],
-                              )
-                            : CircularProgressIndicator()
-                        : Text("2");
+                      return Column(
+                        children: [
+                          AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: VideoPlayer(_controller),
+                          ),
+                          // Icon(_controller.value.initialized &&
+                          //         _controller.value.isPlaying
+                          //     ? Icons.pause
+                          //     : Icons.play_arrow),
+                        ],
+                      );
+                    } else if (snap.hasError)
+                      return Text("This error occoured :${snap.error}");
+                    else
+                      return CircularProgressIndicator();
                   })
 
               // return Center(
