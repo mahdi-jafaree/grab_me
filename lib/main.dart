@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:grab_me/video1.dart';
 import 'package:lottie/lottie.dart';
 
 void main() {
@@ -55,94 +56,97 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage(
-              "assets/bg.jpg",
-            ),
-          ),
-        ),
-        child: Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Expanded(
-                child: SlideTransition(
-                  position: _spaceAnimation,
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: Duration(
-                          seconds: 1,
-                          milliseconds: 500,
-                        ),
-                        child: AnimatedOpacity(
-                          onEnd: () {
-                            if (!_spaceController.isAnimating) {
-                              print("ended");
-                              setState(() {
-                                alienVisible = true;
-                              });
-                            }
-                          },
-                          opacity: alienVisible ? 1.0 : 0.0,
-                          duration: Duration(
-                            seconds: 1,
-                            milliseconds: 500,
-                          ),
-                          child: Lottie.asset(
-                            "assets/alien.json",
-                            width: 100,
-                            height: 100,
-                          ),
-                        ),
-                        bottom: onTop
-                            ? MediaQuery.of(context).size.height * .65
-                            : 10,
-                        left: MediaQuery.of(context).size.width * .4,
-                      ),
-                      AnimatedOpacity(
-                        opacity: alienVisible ? 0.0 : 1.0,
-                        duration: Duration(milliseconds: 700),
-                        child: ClipPath(
-                          clipper: const BeamClipper(),
-                          child: Container(
-                            height: 650,
-                            decoration: BoxDecoration(
-                              gradient: RadialGradient(
-                                radius: 2.0,
-                                colors: [
-                                  Colors.yellow[200],
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.all(40.0),
-                          child: Image.asset(
-                            "assets/spaceship.png",
-                            width: MediaQuery.of(context).size.width * .8,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: Video(itemId: 2684),
+      // Container(
+      //   alignment: Alignment.center,
+      //   decoration: BoxDecoration(
+      //     image: DecorationImage(
+      //       fit: BoxFit.cover,
+      //       image: AssetImage(
+      //         "assets/bg.jpg",
+      //       ),
+      //     ),
+      //   ),
+      //   child:
+      //   child: Container(
+      //     alignment: Alignment.center,
+      //     width: double.infinity,
+      //     height: MediaQuery.of(context).size.height,
+      //     child: Column(
+      //       children: [
+      //         Expanded(
+      //           child: SlideTransition(
+      //             position: _spaceAnimation,
+      //             child: Stack(
+      //               children: [
+      //                 AnimatedPositioned(
+      //                   duration: Duration(
+      //                     seconds: 1,
+      //                     milliseconds: 500,
+      //                   ),
+      //                   child: AnimatedOpacity(
+      //                     onEnd: () {
+      //                       if (!_spaceController.isAnimating) {
+      //                         print("ended");
+      //                         setState(() {
+      //                           alienVisible = true;
+      //                         });
+      //                       }
+      //                     },
+      //                     opacity: alienVisible ? 1.0 : 0.0,
+      //                     duration: Duration(
+      //                       seconds: 1,
+      //                       milliseconds: 500,
+      //                     ),
+      //                     child: Lottie.asset(
+      //                       "assets/alien.json",
+      //                       width: 100,
+      //                       height: 100,
+      //                     ),
+      //                   ),
+      //                   bottom: onTop
+      //                       ? MediaQuery.of(context).size.height * .65
+      //                       : 10,
+      //                   left: MediaQuery.of(context).size.width * .4,
+      //                 ),
+      //                 AnimatedOpacity(
+      //                   opacity: alienVisible ? 0.0 : 1.0,
+      //                   duration: Duration(milliseconds: 700),
+      //                   child: ClipPath(
+      //                     clipper: const BeamClipper(),
+      //                     child: Container(
+      //                       height: 650,
+      //                       decoration: BoxDecoration(
+      //                         gradient: RadialGradient(
+      //                           radius: 2.0,
+      //                           colors: [
+      //                             Colors.yellow[200],
+      //                             Colors.transparent,
+      //                           ],
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ),
+      //                 ),
+      //                 Positioned(
+      //                   top: 10,
+      //                   child: Padding(
+      //                     padding: const EdgeInsets.all(40.0),
+      //                     child: Image.asset(
+      //                       "assets/spaceship.png",
+      //                       width: MediaQuery.of(context).size.width * .8,
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _spaceController.stop();
